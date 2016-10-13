@@ -1,0 +1,19 @@
+Timeouts
+
+Every operation takes an optional inactivity timeout option. This allows you to specify appropriate timeouts for operations. It is important to note that these timeouts are not part of the MySQL protocol, and rather timeout operations through the client. This means that when a timeout is reached, the connection it occurred on will be destroyed and no further operations can be performed.
+
+// Kill query after 60s
+connection.query({sql: 'SELECT COUNT(*) AS count FROM big_table', timeout: 60000}, function (err, rows) {
+  if (err && err.code === 'PROTOCOL_SEQUENCE_TIMEOUT') {
+    throw new Error('too long to count table rows!');
+  }
+
+  if (err) {
+    throw err;
+  }
+
+  console.log(rows[0].count + ' rows');
+});
+
+
+ 
